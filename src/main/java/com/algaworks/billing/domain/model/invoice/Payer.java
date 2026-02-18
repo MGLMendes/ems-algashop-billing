@@ -7,6 +7,7 @@ import lombok.*;
 @Setter(AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class Payer {
     private String fullName;
     private String document;
