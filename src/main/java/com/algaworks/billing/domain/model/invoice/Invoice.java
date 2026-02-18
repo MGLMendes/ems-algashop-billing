@@ -2,6 +2,7 @@ package com.algaworks.billing.domain.model.invoice;
 
 import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
+import com.algaworks.billing.domain.model.invoice.exception.DomainException;
 import com.algaworks.billing.domain.utility.IdGenerator;
 import lombok.*;
 
@@ -67,19 +68,50 @@ public class Invoice {
         return Collections.unmodifiableSet(this.items);
     }
 
+    public boolean isCanceled() {
+        return InvoiceStatus.CANCELED.equals(this.getStatus());
+    }
+
+    public boolean isUnpaid() {
+        return InvoiceStatus.UNPAID.equals(this.getStatus());
+    }
+
+    public boolean isPaid() {
+        return InvoiceStatus.PAID.equals(this.getStatus());
+    }
+
     public void markAsPaid() {
-
+        if (!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
+                    this.getId(),
+                    this.getStatus().toString().toLowerCase()));
+        }
+        this.setPaidAt(OffsetDateTime.now());
+        this.setStatus(InvoiceStatus.PAID);
     }
 
-    public void cancel() {
-
+    public void cancel(String cancelReason) {
+        if (isCanceled()) {
+            throw new DomainException(String.format("Invoice %s is already canceled", this.getId()));
+        }
+        this.setCancelReason(cancelReason);
+        this.setCanceledAt(OffsetDateTime.now());
+        this.setStatus(InvoiceStatus.CANCELED);
     }
 
-    public void assignPaymentGatewayCode(String code) {
-
+    public void assignPaymentGatewayCode(String gatewayCode) {
+        if (!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be edited", this.getId(),
+                    this.getStatus().toString().toLowerCase()));
+        }
+        this.getPaymentSettings().assignGatewayCode(gatewayCode);
     }
 
     public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
+        if (!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be edited", this.getId(),
+                    this.getStatus().toString().toLowerCase()));
+        }
         PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
         this.setPaymentSettings(paymentSettings);
     }
