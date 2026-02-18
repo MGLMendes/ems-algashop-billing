@@ -4,14 +4,12 @@ import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.exception.DomainException;
 import com.algaworks.billing.domain.utility.IdGenerator;
+import org.apache.commons.lang3.StringUtils;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Setter(AccessLevel.PRIVATE)
 @Getter
@@ -42,6 +40,17 @@ public class Invoice {
     private String cancelReason;
 
     public static Invoice issue(String orderId, UUID customerId, Payer payer, Set<LineItem> items) {
+        Objects.requireNonNull(customerId);
+        Objects.requireNonNull(payer);
+        Objects.requireNonNull(items);
+
+        if (StringUtils.isBlank(orderId)) {
+            throw new IllegalArgumentException();
+        }
+
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
 
         BigDecimal totalAmount = items.stream().map(
                 LineItem::getAmount
@@ -101,8 +110,11 @@ public class Invoice {
 
     public void assignPaymentGatewayCode(String gatewayCode) {
         if (!isUnpaid()) {
-            throw new DomainException(String.format("Invoice %s with status %s cannot be edited", this.getId(),
-                    this.getStatus().toString().toLowerCase()));
+            throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
+                    this.getId(), this.getStatus().toString().toLowerCase()));
+        }
+        if (this.getPaymentSettings() == null) {
+            throw new DomainException("Invoice has no payment settings");
         }
         this.getPaymentSettings().assignGatewayCode(gatewayCode);
     }

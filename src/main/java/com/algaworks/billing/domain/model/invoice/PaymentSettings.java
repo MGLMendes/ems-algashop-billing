@@ -3,7 +3,9 @@ package com.algaworks.billing.domain.model.invoice;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.utility.IdGenerator;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -21,7 +23,11 @@ public class PaymentSettings {
     private PaymentMethod method;
 
 
-    public static PaymentSettings brandNew(PaymentMethod method, UUID creditCardId) {
+    static PaymentSettings brandNew(PaymentMethod method, UUID creditCardId) {
+        Objects.requireNonNull(method);
+        if (PaymentMethod.CREDIT_CARD.equals(method)) {
+            Objects.requireNonNull(creditCardId);
+        }
         return new PaymentSettings(
                 IdGenerator.generateTimeBasedUUID(),
                 creditCardId,
@@ -31,6 +37,13 @@ public class PaymentSettings {
     }
 
     void assignGatewayCode(String gatewayCode) {
+        if (StringUtils.isBlank(gatewayCode)) {
+            throw new IllegalArgumentException();
+        }
+
+        if (this.gatewayCode != null) {
+            throw new IllegalArgumentException("Gateway code already assigned");
+        }
         setGatewayCode(gatewayCode);
     }
 }
