@@ -1,4 +1,4 @@
-package com.algaworks.billing.infrastructure.persistence;
+package com.algaworks.billing.infrastructure.persistence.config;
 
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl;
