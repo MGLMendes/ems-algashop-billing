@@ -1,6 +1,7 @@
 package com.algaworks.billing.domain.model.invoice;
 
 import com.algaworks.billing.domain.validator.FieldValidations;
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.util.Objects;
 @Setter(AccessLevel.PRIVATE)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Embeddable
 public class LineItem {
     private Integer number;
     private String name;
