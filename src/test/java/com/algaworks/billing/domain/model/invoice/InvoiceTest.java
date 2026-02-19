@@ -1,5 +1,8 @@
 package com.algaworks.billing.domain.model.invoice;
 
+import com.algaworks.billing.domain.model.invoice.entity.Invoice;
+import com.algaworks.billing.domain.model.invoice.entity.LineItem;
+import com.algaworks.billing.domain.model.invoice.entity.Payer;
 import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.exception.DomainException;

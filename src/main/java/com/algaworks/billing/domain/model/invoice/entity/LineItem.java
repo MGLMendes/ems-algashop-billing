@@ -1,4 +1,4 @@
-package com.algaworks.billing.domain.model.invoice;
+package com.algaworks.billing.domain.model.invoice.entity;
 
 import com.algaworks.billing.domain.validator.FieldValidations;
 import jakarta.persistence.Embeddable;
