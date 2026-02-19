@@ -59,12 +59,17 @@ class InvoiceManagementApplicationServiceIT {
         GenerateInvoiceInput generateInvoiceInput = GenerateInvoiceInputTestDataBuilder.anInput().customerId(customerId).build();
         generateInvoiceInput.setPaymentSettings(PaymentSettingsInput.builder().creditCardId(creditCard.getId())
                 .method(PaymentMethod.CREDIT_CARD).build());
+
         UUID invoiceId = invoiceManagementApplicationService.generate(generateInvoiceInput);
 
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow();
 
         Assertions.assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.UNPAID);
         Assertions.assertThat(invoice.getOrderId()).isEqualTo(generateInvoiceInput.getOrderId());
+
+        Assertions.assertThat(invoice.getVersion()).isEqualTo(0L);
+        Assertions.assertThat(invoice.getCreatedAt()).isNotNull();
+        Assertions.assertThat(invoice.getCreatedByUserId()).isNotNull();
 
         Mockito.verify(invoiceService).issue(any(), any(), any(), any());
     }

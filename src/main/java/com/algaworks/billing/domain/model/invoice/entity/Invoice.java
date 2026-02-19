@@ -1,5 +1,6 @@
 package com.algaworks.billing.domain.model.invoice.entity;
 
+import com.algaworks.billing.domain.model.AbstractAuditableEntity;
 import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.exception.DomainException;
@@ -15,10 +16,10 @@ import java.util.*;
 @Entity
 @Setter(AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Invoice {
+public class Invoice extends AbstractAuditableEntity {
 
     @Id
     @EqualsAndHashCode.Include
