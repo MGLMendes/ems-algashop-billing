@@ -4,6 +4,7 @@ import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.exception.DomainException;
 import com.algaworks.billing.domain.utility.IdGenerator;
+import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@Entity
 @Setter(AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -18,6 +20,7 @@ import java.util.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invoice {
 
+    @Id
     @EqualsAndHashCode.Include
     private UUID id;
     private String orderId;
@@ -29,8 +32,10 @@ public class Invoice {
     private OffsetDateTime expiredAt;
 
     private BigDecimal totalAmount;
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private PaymentSettings paymentSettings;
 
     private Set<LineItem> items = new HashSet<>();
@@ -125,6 +130,7 @@ public class Invoice {
                     this.getStatus().toString().toLowerCase()));
         }
         PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
+        paymentSettings.setInvoice(this);
         this.setPaymentSettings(paymentSettings);
     }
 }

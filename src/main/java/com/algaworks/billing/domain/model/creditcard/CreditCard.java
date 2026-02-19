@@ -1,6 +1,8 @@
 package com.algaworks.billing.domain.model.creditcard;
 
 import com.algaworks.billing.domain.utility.IdGenerator;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,6 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
+@Entity
 @Setter(AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,6 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreditCard {
 
+    @Id
     @EqualsAndHashCode.Include
     private UUID id;
     private OffsetDateTime createdAt;
