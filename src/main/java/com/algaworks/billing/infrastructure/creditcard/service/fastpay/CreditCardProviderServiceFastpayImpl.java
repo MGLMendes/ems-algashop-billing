@@ -1,0 +1,28 @@
+package com.algaworks.billing.infrastructure.creditcard.service.fastpay;
+
+import com.algaworks.billing.domain.model.creditcard.entity.LimitedCreditCard;
+import com.algaworks.billing.domain.model.creditcard.service.CreditCardProviderService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@ConditionalOnProperty(name = "algashop.integrations.payment.provider", havingValue = "FASTPAY")
+public class CreditCardProviderServiceFastpayImpl implements CreditCardProviderService {
+    @Override
+    public LimitedCreditCard register(UUID customerId, String tokenizedCard) {
+        return null;
+    }
+
+    @Override
+    public Optional<LimitedCreditCard> findById(String gatewayCode) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void delete(String gatewayCode) {
+
+    }
+}
