@@ -8,6 +8,7 @@ import com.algaworks.billing.infrastructure.creditcard.client.output.FastpayCred
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,7 +33,13 @@ public class CreditCardProviderServiceFastpayImpl implements CreditCardProviderS
 
     @Override
     public Optional<LimitedCreditCard> findById(String gatewayCode) {
-        return Optional.of(toLimitedCreditCard(fastpayClient.findById(gatewayCode)));
+        FastpayCreditCardResponse response;
+        try {
+            response = fastpayClient.findById(gatewayCode);
+        } catch (HttpClientErrorException.NotFound e) {
+            return Optional.empty();
+        }
+        return Optional.of(toLimitedCreditCard(response));
     }
 
     @Override
@@ -42,6 +49,7 @@ public class CreditCardProviderServiceFastpayImpl implements CreditCardProviderS
 
     private static LimitedCreditCard toLimitedCreditCard(FastpayCreditCardResponse fastpayCreditCardResponse) {
         return LimitedCreditCard.builder()
+                .gatewayCode(fastpayCreditCardResponse.getId())
                 .brand(fastpayCreditCardResponse.getBrand())
                 .expirationMonth(fastpayCreditCardResponse.getExpMonth())
                 .expirationYear(fastpayCreditCardResponse.getExpYear())

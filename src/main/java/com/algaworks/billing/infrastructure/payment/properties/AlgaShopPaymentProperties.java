@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 @Component
-@ConfigurationProperties("algasghop.integrations.payment")
+@ConfigurationProperties("algashop.integrations.payment")
 @Data
 @Validated
 public class AlgaShopPaymentProperties {

@@ -1,4 +1,4 @@
-package com.algaworks.billing.infrastructure.payment.service.fake;
+package com.algaworks.billing.infrastructure.payment.fake;
 
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.payment.entity.Payment;

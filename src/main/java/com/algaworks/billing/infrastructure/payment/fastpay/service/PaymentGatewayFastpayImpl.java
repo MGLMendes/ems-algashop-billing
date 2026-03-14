@@ -1,4 +1,4 @@
-package com.algaworks.billing.infrastructure.payment.service.fastpay;
+package com.algaworks.billing.infrastructure.payment.fastpay.service;
 
 import com.algaworks.billing.domain.model.invoice.payment.entity.Payment;
 import com.algaworks.billing.domain.model.invoice.payment.request.PaymentRequest;
