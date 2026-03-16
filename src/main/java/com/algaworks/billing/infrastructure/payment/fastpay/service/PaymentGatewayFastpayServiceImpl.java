@@ -22,10 +22,10 @@ import java.util.UUID;
 @Service
 @ConditionalOnProperty(name = "algashop.integrations.payment.provider", havingValue = "FASTPAY")
 @RequiredArgsConstructor
-public class PaymentGatewayFastpayImpl implements PaymentGatewayService {
+public class PaymentGatewayFastpayServiceImpl implements PaymentGatewayService {
 
     private final FastpayPaymentAPIClient fastpayPaymentAPIClient;
-    private CreditCardRepository creditCardRepository;
+    private final CreditCardRepository creditCardRepository;
 
     @Override
     public Payment capture(PaymentRequest request) {

@@ -27,8 +27,8 @@ public class CreditCard {
 
     private String lastNumbers;
     private String brand;
-    private Integer expirationMonth;
-    private Integer expirationYear;
+    private Integer expMonth;
+    private Integer expYear;
 
     private String gatewayCode;
 
