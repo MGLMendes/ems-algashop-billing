@@ -7,6 +7,7 @@ import com.algaworks.billing.domain.model.invoice.event.InvoiceCanceledEvent;
 import com.algaworks.billing.domain.model.invoice.event.InvoiceIssuedEvent;
 import com.algaworks.billing.domain.model.invoice.event.InvoicePaidEvent;
 import com.algaworks.billing.domain.model.invoice.exception.DomainException;
+import com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus;
 import com.algaworks.billing.domain.utility.IdGenerator;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,10 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
+
+import static com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus.PAID;
+import static com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus.FAILED;
+import static com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus.REFUNDED;
 
 @Entity
 @Setter(AccessLevel.PRIVATE)
@@ -100,7 +105,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
     }
 
     public boolean isPaid() {
-        return InvoiceStatus.PAID.equals(this.getStatus());
+        return PAID.equals(this.getStatus());
     }
 
     public void markAsPaid() {
@@ -110,7 +115,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
                     this.getStatus().toString().toLowerCase()));
         }
         this.setPaidAt(OffsetDateTime.now());
-        this.setStatus(InvoiceStatus.PAID);
+        this.setStatus(PAID);
         registerEvent(new InvoicePaidEvent(this.getId(), this.getCustomerId(), this.getOrderId(), this.getPaidAt()));
     }
 
@@ -143,5 +148,13 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
         PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
         paymentSettings.setInvoice(this);
         this.setPaymentSettings(paymentSettings);
+    }
+
+    public void updatePaymentStatus(PaymentStatus status) {
+        switch (status) {
+            case FAILED -> cancel("Payment Failed");
+            case REFUNDED -> cancel("Payment Refunded");
+            case PAID -> markAsPaid();
+        }
     }
 }

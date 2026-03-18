@@ -13,6 +13,7 @@ import com.algaworks.billing.infrastructure.payment.fastpay.enums.FastpayPayment
 import com.algaworks.billing.infrastructure.payment.fastpay.input.FastpayPaymentInput;
 import com.algaworks.billing.infrastructure.payment.fastpay.model.FastpayPaymentModel;
 import com.algaworks.billing.infrastructure.payment.fastpay.util.FastpayEnumConverter;
+import com.algaworks.billing.infrastructure.payment.properties.AlgaShopPaymentProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class PaymentGatewayFastpayServiceImpl implements PaymentGatewayService {
 
     private final FastpayPaymentAPIClient fastpayPaymentAPIClient;
     private final CreditCardRepository creditCardRepository;
+    private final AlgaShopPaymentProperties algaShopPaymentProperties;
+
 
     @Override
     public Payment capture(PaymentRequest request) {
@@ -54,7 +57,7 @@ public class PaymentGatewayFastpayServiceImpl implements PaymentGatewayService {
                 .addressLine1(payerAddress.getState() + ", " + payerAddress.getNumber())
                 .addressLine2(payerAddress.getComplement())
                 .zipCode(payerAddress.getZipCode())
-                .replyToUrl("http://urlqualquer");
+                .replyToUrl(algaShopPaymentProperties.getFastpay().getWebhookUrl());
 
         switch (request.getMethod()) {
             case CREDIT_CARD -> {

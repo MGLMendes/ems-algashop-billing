@@ -9,6 +9,7 @@ import com.algaworks.billing.domain.model.invoice.entity.LineItem;
 import com.algaworks.billing.domain.model.invoice.entity.Payer;
 import com.algaworks.billing.domain.model.invoice.exception.InvoiceNotFoundException;
 import com.algaworks.billing.domain.model.invoice.payment.entity.Payment;
+import com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus;
 import com.algaworks.billing.domain.model.invoice.payment.request.PaymentRequest;
 import com.algaworks.billing.domain.model.invoice.payment.service.PaymentGatewayService;
 import com.algaworks.billing.domain.model.invoice.repository.InvoiceRepository;
@@ -69,6 +70,15 @@ public class InvoiceManagementApplicationService {
         }
 
         invoiceService.assignPayment(invoice, payment);
+        invoiceRepository.saveAndFlush(invoice);
+    }
+
+    @Transactional
+    public void updatePaymentStatus(UUID invoiceId, PaymentStatus paymentStatus) {
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
+                () -> new InvoiceNotFoundException(invoiceId)
+        );
+        invoice.updatePaymentStatus(paymentStatus);
         invoiceRepository.saveAndFlush(invoice);
     }
 
