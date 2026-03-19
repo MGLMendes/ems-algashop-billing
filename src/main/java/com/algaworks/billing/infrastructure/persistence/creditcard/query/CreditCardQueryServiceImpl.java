@@ -2,7 +2,7 @@ package com.algaworks.billing.infrastructure.persistence.creditcard.query;
 
 import com.algaworks.billing.application.creditcard.query.CreditCardQueryService;
 import com.algaworks.billing.application.creditcard.query.output.CreditCardOutput;
-import com.algaworks.billing.domain.model.creditcard.exception.CreditCardNotFoundException;
+import com.algaworks.billing.domain.model.creditcard.exception.CreditCardNotFoundEntityNotFoundException;
 import com.algaworks.billing.domain.model.creditcard.repository.CreditCardRepository;
 import com.algaworks.billing.infrastructure.persistence.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CreditCardQueryServiceImpl implements CreditCardQueryService {
         return creditCardRepository.findByCustomerIdAndId(customerId, creditCardId).map(
                 c -> mapper.convert(c, CreditCardOutput.class)
         ).orElseThrow(
-                () -> new CreditCardNotFoundException(creditCardId)
+                () -> new CreditCardNotFoundEntityNotFoundException(creditCardId)
         );
 
     }

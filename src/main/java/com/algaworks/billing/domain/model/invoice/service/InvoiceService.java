@@ -3,7 +3,7 @@ package com.algaworks.billing.domain.model.invoice.service;
 import com.algaworks.billing.domain.model.invoice.entity.Invoice;
 import com.algaworks.billing.domain.model.invoice.entity.LineItem;
 import com.algaworks.billing.domain.model.invoice.entity.Payer;
-import com.algaworks.billing.domain.model.invoice.exception.DomainException;
+import com.algaworks.billing.domain.model.invoice.exception.DomainEntityNotFoundException;
 import com.algaworks.billing.domain.model.invoice.payment.entity.Payment;
 import com.algaworks.billing.domain.model.invoice.repository.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class InvoiceService {
 
     public Invoice issue(String orderId, UUID customerId, Payer payer, Set<LineItem> items) {
         if (invoiceRepository.existsByOrderId(orderId)) {
-            throw new DomainException(String.format("Invoice already exists for order %s", orderId));
+            throw new DomainEntityNotFoundException(String.format("Invoice already exists for order %s", orderId));
         }
 
         return Invoice.issue(orderId, customerId, payer, items);

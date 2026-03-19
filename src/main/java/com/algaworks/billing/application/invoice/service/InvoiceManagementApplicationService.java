@@ -1,13 +1,13 @@
 package com.algaworks.billing.application.invoice.service;
 
 import com.algaworks.billing.application.invoice.input.*;
-import com.algaworks.billing.domain.model.creditcard.exception.CreditCardNotFoundException;
+import com.algaworks.billing.domain.model.creditcard.exception.CreditCardNotFoundEntityNotFoundException;
 import com.algaworks.billing.domain.model.creditcard.repository.CreditCardRepository;
 import com.algaworks.billing.domain.model.invoice.entity.Address;
 import com.algaworks.billing.domain.model.invoice.entity.Invoice;
 import com.algaworks.billing.domain.model.invoice.entity.LineItem;
 import com.algaworks.billing.domain.model.invoice.entity.Payer;
-import com.algaworks.billing.domain.model.invoice.exception.InvoiceNotFoundException;
+import com.algaworks.billing.domain.model.invoice.exception.InvoiceNotFoundEntityNotFoundException;
 import com.algaworks.billing.domain.model.invoice.payment.entity.Payment;
 import com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus;
 import com.algaworks.billing.domain.model.invoice.payment.request.PaymentRequest;
@@ -53,7 +53,7 @@ public class InvoiceManagementApplicationService {
     @Transactional
     public void processPayment(UUID invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
-                () -> new InvoiceNotFoundException(invoiceId)
+                () -> new InvoiceNotFoundEntityNotFoundException(invoiceId)
         );
 
         PaymentRequest paymentRequest = toPaymentRequest(invoice);
@@ -76,7 +76,7 @@ public class InvoiceManagementApplicationService {
     @Transactional
     public void updatePaymentStatus(UUID invoiceId, PaymentStatus paymentStatus) {
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
-                () -> new InvoiceNotFoundException(invoiceId)
+                () -> new InvoiceNotFoundEntityNotFoundException(invoiceId)
         );
         invoice.updatePaymentStatus(paymentStatus);
         invoiceRepository.saveAndFlush(invoice);
@@ -125,7 +125,7 @@ public class InvoiceManagementApplicationService {
 
     private void verifyCreditCardId(UUID creditCardId, UUID customerId) {
         if (creditCardId != null && !creditCardRepository.existsByIdAndCustomerId(creditCardId, customerId)) {
-            throw new CreditCardNotFoundException(creditCardId);
+            throw new CreditCardNotFoundEntityNotFoundException(creditCardId);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.algaworks.billing.presentention;
+package com.algaworks.billing.presentention.creditcard;
 
 import com.algaworks.billing.application.creditcard.query.CreditCardQueryService;
 import com.algaworks.billing.application.creditcard.query.input.TokenizedCreditCardInput;

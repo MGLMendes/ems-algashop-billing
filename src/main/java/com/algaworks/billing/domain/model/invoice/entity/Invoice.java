@@ -6,7 +6,7 @@ import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
 import com.algaworks.billing.domain.model.invoice.event.InvoiceCanceledEvent;
 import com.algaworks.billing.domain.model.invoice.event.InvoiceIssuedEvent;
 import com.algaworks.billing.domain.model.invoice.event.InvoicePaidEvent;
-import com.algaworks.billing.domain.model.invoice.exception.DomainException;
+import com.algaworks.billing.domain.model.invoice.exception.DomainEntityNotFoundException;
 import com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus;
 import com.algaworks.billing.domain.utility.IdGenerator;
 import jakarta.persistence.*;
@@ -18,8 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 import static com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus.PAID;
-import static com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus.FAILED;
-import static com.algaworks.billing.domain.model.invoice.payment.enums.PaymentStatus.REFUNDED;
 
 @Entity
 @Setter(AccessLevel.PRIVATE)
@@ -110,7 +108,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
     public void markAsPaid() {
         if (!isUnpaid()) {
-            throw new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
+            throw new DomainEntityNotFoundException(String.format("Invoice %s with status %s cannot be marked as paid",
                     this.getId(),
                     this.getStatus().toString().toLowerCase()));
         }
@@ -121,7 +119,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
     public void cancel(String cancelReason) {
         if (isCanceled()) {
-            throw new DomainException(String.format("Invoice %s is already canceled", this.getId()));
+            throw new DomainEntityNotFoundException(String.format("Invoice %s is already canceled", this.getId()));
         }
         this.setCancelReason(cancelReason);
         this.setCanceledAt(OffsetDateTime.now());
@@ -131,18 +129,18 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
     public void assignPaymentGatewayCode(String gatewayCode) {
         if (!isUnpaid()) {
-            throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
+            throw new DomainEntityNotFoundException(String.format("Invoice %s with status %s cannot be edited",
                     this.getId(), this.getStatus().toString().toLowerCase()));
         }
         if (this.getPaymentSettings() == null) {
-            throw new DomainException("Invoice has no payment settings");
+            throw new DomainEntityNotFoundException("Invoice has no payment settings");
         }
         this.getPaymentSettings().assignGatewayCode(gatewayCode);
     }
 
     public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
         if (!isUnpaid()) {
-            throw new DomainException(String.format("Invoice %s with status %s cannot be edited", this.getId(),
+            throw new DomainEntityNotFoundException(String.format("Invoice %s with status %s cannot be edited", this.getId(),
                     this.getStatus().toString().toLowerCase()));
         }
         PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);

@@ -1,4 +1,4 @@
-package com.algaworks.billing.presentention;
+package com.algaworks.billing.presentention.invoice;
 
 import com.algaworks.billing.application.invoice.input.GenerateInvoiceInput;
 import com.algaworks.billing.application.invoice.output.InvoiceOutput;

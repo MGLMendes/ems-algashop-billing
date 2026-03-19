@@ -5,7 +5,7 @@ import com.algaworks.billing.domain.model.invoice.entity.LineItem;
 import com.algaworks.billing.domain.model.invoice.entity.Payer;
 import com.algaworks.billing.domain.model.invoice.enums.InvoiceStatus;
 import com.algaworks.billing.domain.model.invoice.enums.PaymentMethod;
-import com.algaworks.billing.domain.model.invoice.exception.DomainException;
+import com.algaworks.billing.domain.model.invoice.exception.DomainEntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -90,7 +90,7 @@ class InvoiceTest {
     @Test
     public void shouldThrowExceptionWhenChangingPaymentSettingsToPaidInvoice() {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().status(InvoiceStatus.PAID).build();
-        Assertions.assertThatExceptionOfType(DomainException.class)
+        Assertions.assertThatExceptionOfType(DomainEntityNotFoundException.class)
                 .isThrownBy(() -> invoice.changePaymentSettings(PaymentMethod.CREDIT_CARD, UUID.randomUUID()));
     }
 
@@ -100,7 +100,7 @@ class InvoiceTest {
     public void shouldThrowExceptionWhenMarkingCanceledInvoiceAsPaid() {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().status(InvoiceStatus.CANCELED).build();
 
-        Assertions.assertThatExceptionOfType(DomainException.class)
+        Assertions.assertThatExceptionOfType(DomainEntityNotFoundException.class)
                 .isThrownBy(invoice::markAsPaid);
     }
 
@@ -108,7 +108,7 @@ class InvoiceTest {
     public void shouldThrowExceptionWhenCancelingAlreadyCanceledInvoice() {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().status(InvoiceStatus.CANCELED).build();
 
-        Assertions.assertThatExceptionOfType(DomainException.class)
+        Assertions.assertThatExceptionOfType(DomainEntityNotFoundException.class)
                 .isThrownBy(() -> invoice.cancel("Another reason"));
     }
 
@@ -125,7 +125,7 @@ class InvoiceTest {
     @Test
     public void shouldThrowExceptionWhenAssigningGatewayCodeToPaidInvoice() {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().status(InvoiceStatus.PAID).build();
-        Assertions.assertThatExceptionOfType(DomainException.class)
+        Assertions.assertThatExceptionOfType(DomainEntityNotFoundException.class)
                 .isThrownBy(() -> invoice.assignPaymentGatewayCode("some-code"));
     }
 
