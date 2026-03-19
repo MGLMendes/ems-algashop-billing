@@ -10,6 +10,8 @@ import com.algaworks.billing.domain.model.invoice.payment.request.PaymentRequest
 import com.algaworks.billing.infrastructure.AbstractFastpayIT;
 import com.algaworks.billing.infrastructure.creditcard.service.fastpay.config.FastpayCreditCardTokenizationAPIClientConfig;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +33,16 @@ class PaymentGatewayFastpayServiceImplIT extends AbstractFastpayIT {
     private CreditCardRepository creditCardRepository;
 
     private static final UUID validCustomerId = UUID.randomUUID();
+
+    @BeforeAll
+    static void beforeAll() {
+        AbstractFastpayIT.startMock();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        AbstractFastpayIT.stopMock();
+    }
 
     @Test
     void shouldProcessPaymentWithCreditCard() {

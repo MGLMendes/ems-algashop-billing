@@ -4,6 +4,8 @@ import com.algaworks.billing.domain.model.creditcard.entity.LimitedCreditCard;
 import com.algaworks.billing.infrastructure.AbstractFastpayIT;
 import com.algaworks.billing.infrastructure.creditcard.service.fastpay.config.FastpayCreditCardTokenizationAPIClientConfig;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -14,6 +16,16 @@ import java.util.Optional;
 @SpringBootTest
 @Import(FastpayCreditCardTokenizationAPIClientConfig.class)
 class CreditCardProviderServiceFastpayImplIT extends AbstractFastpayIT {
+
+    @BeforeAll
+    static void beforeAll() {
+        AbstractFastpayIT.startMock();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        AbstractFastpayIT.stopMock();
+    }
 
     @Test
     void shouldRegisterCreditCard() {
