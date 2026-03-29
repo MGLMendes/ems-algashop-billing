@@ -1,5 +1,6 @@
 package com.algaworks.billing.application.invoice.service;
 
+import com.algaworks.billing.application.invoice.AbstractApplicationIT;
 import com.algaworks.billing.application.invoice.input.GenerateInvoiceInput;
 import com.algaworks.billing.application.invoice.input.PaymentSettingsInput;
 import com.algaworks.billing.domain.model.creditcard.CreditCardTestDataBuilder;
@@ -23,18 +24,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@SpringBootTest
-@Transactional
-class InvoiceManagementApplicationServiceIT {
+class InvoiceManagementApplicationServiceIT extends AbstractApplicationIT {
 
 
     @Autowired
